@@ -1,0 +1,323 @@
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+%\usefonttheme{serif}
+\beamertemplatenavigationsymbolsempty
+
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\setbeamersize{description width=1cm}
+
+\usepackage{luacode}
+\usepackage{luatexja}
+\usepackage{pgfpages}
+\usepackage[osf]{mathpazo}
+
+\begin{luacode*}
+  USE_IPAFONT = os.getenv"USE_IPAFONT"
+  USE_YUFONT = os.getenv"USE_YUFONT"
+  
+  if USE_YUFONT == "true" then
+    tex.sprint("\\AtBeginDocument{\\usepackage[yu-osx, deluxe, expert]{luatexja-preset}}")
+  elseif USE_IPAFONT == "true" then
+    tex.sprint("\\AtBeginDocument{\\usepackage[ipaex, deluxe, expert]{luatexja-preset}}")
+  else
+    tex.sprint("\\AtBeginDocument{\\usepackage[hiragino-pro, deluxe, expert]{luatexja-preset}}")
+  end
+\end{luacode*}
+
+\usepackage{epigraph}
+\usepackage{etoolbox}
+\usepackage{tikz}
+\usepackage{framed}
+\usepackage[ss]{libertine}
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+%\setbeameroption{show notes on second screen=right}
+
+\setmonofont[Ligatures=TeX]{CMU Typewriter Text}
+
+\input{vc.tex}
+
+\title[量子ビットで公平なガチャ]{%
+  量子ビットで公平なガチャ \\
+  {\normalsize Quantum Fair Gacha} 
+}
+\author[吉村 優]{%
+  吉村 優 \\
+  Hikaru \textsc{Yoshimura}
+}
+\date[October 23, 2017]{%
+  October 23, 2017 \\%
+  {\footnotesize (Commit ID: \GITAbrHash)}
+}
+\institute[株式会社ドワンゴ]{%
+  株式会社ドワンゴ \\
+  \href{mailto:yyu@mental.poker}{yyu@mental.poker}
+
+}
+
+\input{./lib/quotebox.tex}
+\input{./lib/footnotemark.tex}
+\input{./lib/ballon.tex}
+
+\newcommand\ballref[1]{%
+\tikz \node[circle, shade,ball color=structure.fg,inner sep=0pt,%
+  text width=8pt,font=\tiny,align=center] {\color{white}\ref{#1}};
+}
+
+\begin{document}
+
+\frame{\maketitle}
+
+\section{自己紹介}
+\begin{frame}
+  \frametitle{自己紹介}
+  
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \centering
+      \begin{figure}
+        \includegraphics[width=0.95\textwidth]{img/bird2x.png}
+      \end{figure}
+
+      \begin{description}
+        \item[Twitter] \href{https://twitter.com/\_yyu\_}{@\_yyu\_}
+        \item[Qiita] \href{https://qiita.com/yyu}{yyu}
+        \item[GitHub] \href{https://github.com/y-yu}{y-yu}
+      \end{description}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{itemize}
+        \item<2-> 筑波大学 情報科学類卒（学士）
+        \item<3-> 株式会社ドワンゴ 入社
+        \item<4-> 第二サービス開発本部 \\
+          Dwango Cloud Service部 \\
+          認証基盤セクション
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{ガチャとは？}
+
+\begin{frame}
+  \frametitle{ガチャとは？}
+
+  \begin{itemize}
+    \item<2-> ソーシャルゲームなどに実装された機能のひとつ
+    \item<3-> ユーザーがお金を投入すると\textbf{確率}で特定の景品を入手できる
+  \end{itemize}
+
+  \begin{center}
+    \uncover<4->{
+      \begin{tikzpicture}
+        \calloutquote[width=5cm,position={(0.7,-0.2)},fill=blue!30,rounded corners]{誰が確率を計算するの？}
+      \end{tikzpicture}
+    }
+
+    \uncover<5->{
+      \begin{tikzpicture}
+        \calloutquote[width=4cm,position={(-0.5,-0.2)},fill=green!30,rounded corners]{運営のサーバー？}
+      \end{tikzpicture}
+    }
+
+    \uncover<6->{
+      \begin{tikzpicture}
+        \calloutquote[width=10cm,position={(0.9,-0.2)},fill=red!30,rounded corners]{サーバーの実装が表示された確率に従っているのか？}
+      \end{tikzpicture}
+    }
+  \end{center}
+\end{frame}
+
+\section{公平なガチャ}
+
+\begin{frame}
+  \frametitle{公平なガチャ}
+
+  \begin{itemize}
+    \item 次のような\textbf{公平なガチャ}が欲しい
+    \begin{itemize}
+      \item<2-> ユーザーにとっても運営にとっても、ガチャによる景品の出現確率が実装に基づいて明らかである
+      \item<3-> 悪意を持つユーザーや、悪意を持つ運営による確率操作ができない
+    \end{itemize}
+  \end{itemize}
+
+  \uncover<4->{
+    \begin{exampleblock}{既存の方法}
+      \begin{itemize}
+        \item ブロックチェーンを利用した方法
+        \item \textbf{コミットメントを利用した方法}\cite{commitment}
+      \end{itemize}
+    \end{exampleblock}
+  }
+\end{frame}
+
+\section{コミットメント}
+
+\begin{frame}
+  \frametitle{コミットメント}
+
+  \uncover<2->{
+    \begin{block}{コミットメント}
+      \begin{description}
+        \item[コミット]<3->
+          送信者はコミットしたい情報$b$を暗号化して受信者に送信する
+        \item[公開]<4->
+          送信者は受信者が$b$を復元できるように付加的な情報$r$を受信者に送信する 
+      \end{description}
+    \end{block}
+  }
+
+  \uncover<5->{
+    \begin{exampleblock}{コミットメントの性質}
+      \begin{description}
+        \item[隠蔽] コミットのステップでは、受信者はコミットされた値について何も分からない
+        \item[束縛] 送信者はコミット後に、コミットした値に対応する情報を変更することができない
+      \end{description}
+    \end{exampleblock}
+  }
+\end{frame}
+
+\section{隠蔽と束縛とガチャ}
+
+\begin{frame}
+  \frametitle{隠蔽と束縛とガチャ}
+
+  \begin{center}
+    \uncover<2->{
+      \begin{tikzpicture}
+        \calloutquote[width=8cm,position={(-0.7,-0.2)},fill=red!30,rounded corners]{隠蔽と束縛を同時に満すことはできない}
+      \end{tikzpicture}
+    }
+
+    \uncover<3->{
+      \begin{tikzpicture}
+        \calloutquote[width=7cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{どちらかを\textbf{計算の複雑さ}に依存させる}
+      \end{tikzpicture}
+    }
+
+    \uncover<4->{
+      \begin{tikzpicture}
+        \calloutquote[width=9cm,position={(-0.7,-0.2)},fill=cyan!30,rounded corners]{隠蔽と束縛の不完全さがガチャに影響を与える？}
+      \end{tikzpicture}
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{隠蔽と束縛とガチャ}
+
+  \setlength{\leftmarginii}{0pt}
+  \begin{description}
+    \item[隠蔽が計算の複雑さに依存する場合]\mbox{}\\
+      \begin{itemize}
+        \item<2-> ユーザーは計算によってコミットされた情報から平文を復元できるので、
+        欲しい景品を手に入れることができる
+          \begin{center}
+            \uncover<3->{
+              \begin{tikzpicture}
+                \calloutquote[width=4cm,position={(-0.7,-0.2)},fill=green!30,rounded corners]{ユーザーが有利！}
+              \end{tikzpicture}
+            }
+          \end{center}
+      \end{itemize}
+    \item[束縛が計算の複雑さに依存する場合]\mbox{}\\
+      \begin{itemize}
+        \item<4-> 運営は計算によってコミット後に値を操作できるので、
+        ユーザーが得る景品を操作できる
+          \begin{center}
+            \uncover<5->{
+              \begin{tikzpicture}
+                \calloutquote[width=3cm,position={(0.7,-0.2)},fill=cyan!30,rounded corners]{運営が有利！}
+              \end{tikzpicture}
+            }
+          \end{center}
+      \end{itemize}
+  \end{description}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{隠蔽と束縛とガチャ}
+ 
+  \begin{center}
+    \begin{tikzpicture}
+      \calloutquote[width=8cm,position={(-0.7,-0.2)},fill=red!30,rounded corners]{\LARGE 結局、公平ではない！}
+    \end{tikzpicture}
+
+    \uncover<2->{
+      \begin{tikzpicture}
+        \calloutquote[width=10cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{\LARGE 量子ビット（qubit）を使おう！}
+      \end{tikzpicture}
+    }
+  \end{center}
+\end{frame}
+
+\section{量子ビットで公平なガチャ}
+
+\begin{frame}
+  \frametitle{量子ビットで公平なガチャ}
+
+  \begin{itemize}
+    \item<2-> たとえ量子ビットを利用しても、隠蔽と束縛を無条件に達成できない
+    \item<3-> 量子ビットにより、隠蔽と束縛を\textbf{公平に不完全}にできる
+  \end{itemize}
+
+  \uncover<4->{
+    \begin{block}{公平に不完全な隠蔽と束縛}
+      ユーザーがコミットされた情報から平文を復元できる確率と、
+      運営が平文をコミットした後に平文を変更できる確率が等しい
+    \end{block}
+  }
+
+  \begin{itemize}
+    \item<5-> ``量子コイントス''\cite{AMBAINIS2004398,PhysRevA.80.062321}のテクニックを利用している
+    \item<6-> プロトコルの詳細を述べるには時間が足りない……
+  \end{itemize}
+
+  \begin{center}
+    \uncover<7->{
+      \begin{tikzpicture}
+        \calloutquote[width=7cm,position={(-0.7,-0.2)},fill=green!30,rounded corners]{興味がある方は僕と話しましょう！}
+      \end{tikzpicture}
+    }
+  \end{center}
+\end{frame}
+
+\section{まとめ}
+
+\begin{frame}
+  \frametitle{まとめ}
+  
+  \begin{itemize}
+    \item<2-> ガチャにおけるサーバーサイドの確率計算に疑念を抱くユーザーがいる
+    \item<3-> コミットメントにおける隠蔽と束縛がガチャに大きな影響を与える
+    \item<4-> 量子ビットを利用することで、コミットメントを利用したより公平なガチャが作れる
+  \end{itemize}
+\end{frame}
+
+\section*{参考文献}
+\begin{frame}
+  \frametitle{参考文献}
+
+  \bibliographystyle{junsrt_url}
+  \nocite{*}
+  \bibliography{ref}
+\end{frame}
+
+\begin{frame}
+  \frametitle{目次}
+
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\begin{frame}
+  \centering
+  {\Huge Thank you for attention!}
+\end{frame}
+
+\end{document}
