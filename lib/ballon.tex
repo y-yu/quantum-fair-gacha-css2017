@@ -5,6 +5,7 @@
     width/.code                   =  {\def\calloutquotewidth{#1}},
     position/.code                =  {\def\calloutquotepos{#1}}, 
     author/.code                  =  {\def\calloutquoteauthor{#1}},
+    at/.code                      =  {\def\calloutquoteat{#1}},
     /calloutquote/.unknown/.code   =  {\let\searchname=\pgfkeyscurrentname
                                  \pgfkeysalso{\searchname/.try=#1,                                
     /tikz/\searchname/.retry=#1},\pgfkeysalso{\searchname/.try=#1,
@@ -16,9 +17,10 @@
        \pgfkeys{/calloutquote/.cd,
          width               = 5cm,
          position            = {(0,-1)},
+         at                  = {(0,0)},
          author              = {}}
   \pgfqkeys{/calloutquote}{#1}                   
   \node [rectangle callout,callout relative pointer={\calloutquotepos},text width=\calloutquotewidth,/calloutquote/.cd,
-     #1] (tmpcall) at (0,0) {\hfil#2\hfil};
+     #1] (tmpcall) at \calloutquoteat {\hfil#2\hfil};
   \node at (tmpcall.pointer){\calloutquoteauthor};    
 }

@@ -34,6 +34,7 @@
 \usepackage[ss]{libertine}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage{braket}
 
 \renewcommand{\kanjifamilydefault}{\gtdefault}
 
@@ -43,8 +44,8 @@
 
 \input{vc.tex}
 
-\title[量子ビットで公平なガチャ]{%
-  量子ビットで公平なガチャ \\
+\title[量子情報で公平なガチャ]{%
+  量子情報で公平なガチャ \\
   {\normalsize Quantum Fair Gacha} 
 }
 \author[吉村 優]{%
@@ -98,6 +99,7 @@
         \item<4-> 第二サービス開発本部 \\
           Dwango Cloud Service部 \\
           認証基盤セクション
+        \item<5-> ニコニコ動画などのアカウントシステムを実装しています
       \end{itemize}
     \end{column}
   \end{columns}
@@ -110,25 +112,25 @@
 
   \begin{itemize}
     \item<2-> ソーシャルゲームなどに実装された機能のひとつ
-    \item<3-> ユーザーがお金を投入すると\textbf{確率}で特定の景品を入手できる
+    \item<3-> ユーザーがお金を投入すると\textbf{確率}で景品を入手できる
   \end{itemize}
 
   \begin{center}
     \uncover<4->{
       \begin{tikzpicture}
-        \calloutquote[width=5cm,position={(0.7,-0.2)},fill=blue!30,rounded corners]{誰が確率を計算するの？}
+        \calloutquote[width=5cm,position={(0.7,-0.2)},fill=blue!30,rounded corners]{誰が確率を計算するのか？}
       \end{tikzpicture}
     }
 
     \uncover<5->{
       \begin{tikzpicture}
-        \calloutquote[width=4cm,position={(-0.5,-0.2)},fill=green!30,rounded corners]{運営のサーバー？}
+        \calloutquote[width=8cm,position={(-0.5,-0.2)},fill=green!30,rounded corners]{運営のサーバーサイドアプリケーション？}
       \end{tikzpicture}
     }
 
     \uncover<6->{
       \begin{tikzpicture}
-        \calloutquote[width=10cm,position={(0.9,-0.2)},fill=red!30,rounded corners]{サーバーの実装が表示された確率に従っているのか？}
+        \calloutquote[width=9cm,position={(0.9,-0.2)},fill=red!30,rounded corners]{その実装が表示された確率に従っているのか？}
       \end{tikzpicture}
     }
   \end{center}
@@ -140,14 +142,14 @@
   \frametitle{公平なガチャ}
 
   \begin{itemize}
-    \item 次のような\textbf{公平なガチャ}が欲しい
+    \item<2-> 次のような\textbf{公平なガチャ}が欲しい
     \begin{itemize}
-      \item<2-> ユーザーにとっても運営にとっても、ガチャによる景品の出現確率が実装に基づいて明らかである
-      \item<3-> 悪意を持つユーザーや、悪意を持つ運営による確率操作ができない
+      \item<3-> ユーザーにとっても運営にとっても、ガチャによる景品の出現確率が実装に基づいて明らかである
+      \item<4-> 悪意を持つユーザーや、悪意を持つ運営による確率操作ができない
     \end{itemize}
   \end{itemize}
 
-  \uncover<4->{
+  \uncover<5->{
     \begin{exampleblock}{既存の方法}
       \begin{itemize}
         \item ブロックチェーンを利用した方法
@@ -251,20 +253,20 @@
 
     \uncover<2->{
       \begin{tikzpicture}
-        \calloutquote[width=10cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{\LARGE 量子ビット（qubit）を使おう！}
+        \calloutquote[width=9cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{\LARGE 量子情報を使おう！}
       \end{tikzpicture}
     }
   \end{center}
 \end{frame}
 
-\section{量子ビットで公平なガチャ}
+\section{量子情報で公平なガチャ}
 
 \begin{frame}
-  \frametitle{量子ビットで公平なガチャ}
+  \frametitle{量子情報で公平なガチャ}
 
   \begin{itemize}
-    \item<2-> たとえ量子ビットを利用しても、隠蔽と束縛を無条件に達成できない
-    \item<3-> 量子ビットにより、隠蔽と束縛を\textbf{公平に不完全}にできる
+    \item<2-> たとえ量子情報を利用しても、隠蔽と束縛を無条件に達成できない
+    \item<3-> 量子情報により、隠蔽と束縛を\textbf{公平に不完全}にできる
   \end{itemize}
 
   \uncover<4->{
@@ -276,13 +278,108 @@
 
   \begin{itemize}
     \item<5-> ``量子コイントス''\cite{AMBAINIS2004398,PhysRevA.80.062321}のテクニックを利用している
-    \item<6-> プロトコルの詳細を述べるには時間が足りない……
   \end{itemize}
 
+\end{frame}
+
+\section{量子コイントス}
+
+\begin{frame}
+  \frametitle{量子コイントス\cite{AMBAINIS2004398}}
+
+  \begin{enumerate}
+    \item<2-> アリスはランダムに$b \in \{0, 1\}, x \in \{0, 1\}$を選び、
+    対応する量子状態$\ket{\phi_{b,x}}$を選び、\textbf{量子通信回線}でボブに送信する
+    \[
+      \ket{\phi_{b, x}} = \left\{\begin{array}{ll}
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right) & \text{if}\; b = 0, x = 0 \\
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right) & \text{if}\; b = 0, x = 1 \\
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{2}\right) & \text{if}\; b = 1, x = 0 \\
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{2}\right) & \text{if}\; b = 1, x = 1
+                                \end{array}\right.
+    \]
+   
+    \item<3-> ボブは受け取った$\ket{\phi_{b,x}}$を\textbf{量子メモリー}に保存した後、
+    ランダムに$b' \in \{0, 1\}$を選び$b'$をアリスへ送信する
+   
+    \item<4-> アリスは$b, x$をボブへ公開し、ボブは量子メモリーから$\ket{\phi_{b,x}}$を
+    取り出し基底$\{\ket{\phi_{b,0}}, \ket{\phi_{b,1}}, \ket{2 - b}\}$で測定し、
+    測定結果を$x'$とする
+   
+    \item<5-> $x \ne x'$の場合ボブは処理を中止する。
+    そうでない場合、アリスとボブはコイントスの結果として$b \oplus b'$を得る
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{量子コイントス\cite{AMBAINIS2004398}}
+
+  \begin{enumerate}
+    \item アリスはランダムに$b \in \{0, 1\}, x \in \{0, 1\}$を選び、
+    対応する量子状態$\ket{\phi_{b,x}}$を選び、\textbf{量子通信回線}でボブに送信する
+    \[
+      \ket{\phi_{b, x}} = \left\{\begin{array}{ll}
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right) & \text{if}\; b = 0, x = 0 \\
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right) & \text{if}\; b = 0, x = 1 \\
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{2}\right) & \text{if}\; b = 1, x = 0 \\
+                                   \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{2}\right) & \text{if}\; b = 1, x = 1
+                                \end{array}\right.
+    \]
+   
+    \item ボブは受け取った$\ket{\phi_{b,x}}$を\textbf{量子メモリー}に保存した後、
+    ランダムに$b' \in \{0, 1\}$を選び$b'$をアリスへ送信する
+   
+    \item アリスは$b, x$をボブへ公開し、ボブは量子メモリーから$\ket{\phi_{b,x}}$を
+    取り出し基底$\{\ket{\phi_{b,0}}, \ket{\phi_{b,1}}, \ket{2 - b}\}$で測定し、
+    測定結果を$x'$とする
+   
+    \item $x \ne x'$の場合ボブは処理を中止する。
+    そうでない場合、アリスとボブはコイントスの結果として$b \oplus b'$を得る
+  \end{enumerate}
+
+  \uncover<1->{
+    \begin{tikzpicture}[overlay, remember picture]
+      \pgftransformshift{\pgfpointanchor{current page}{center}}
+      \calloutquote[width=8cm,position={(0.7,-0.2)},at={(0,1)},fill=red!30,rounded corners]{\LARGE 時間がいないの割愛！}
+    \end{tikzpicture}
+  }
+
+  \uncover<2->{
+    \begin{tikzpicture}[overlay, remember picture]
+      \pgftransformshift{\pgfpointanchor{current page}{center}}
+      \calloutquote[width=10cm,position={(-0.7,-0.2)},at={(0,-1)},fill=green!30,rounded corners]{\LARGE これは今の技術で実現できる？}
+    \end{tikzpicture}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{量子コイントス}
+
+  \begin{alertblock}{必要なもの}
+    \begin{itemize}
+      \item 量子計算機
+      \item 量子通信回線
+      \item 量子メモリー
+    \end{itemize}
+  \end{alertblock}
+
   \begin{center}
-    \uncover<7->{
+    \uncover<2->{
       \begin{tikzpicture}
-        \calloutquote[width=7cm,position={(-0.7,-0.2)},fill=green!30,rounded corners]{興味がある方は僕と話しましょう！}
+        \calloutquote[width=9cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{量子計算機はGoogleかIBMが作ってくれるはず}
+      \end{tikzpicture}
+    }
+    
+    \uncover<3->{
+      \begin{tikzpicture}
+        \calloutquote[width=11.5cm,position={(-0.7,-0.2)},fill=cyan!30,rounded corners]{スマートフォンに量子通信回線と量子メモリーが搭載されたら}
+      \end{tikzpicture}
+    }
+
+    \uncover<4->{
+      \begin{tikzpicture}
+        \calloutquote[width=9cm,position={(0.7,-0.2)},fill=red!30,rounded corners]{きっとこのプロトコルの需要がうまれるはず！}
       \end{tikzpicture}
     }
   \end{center}
@@ -296,8 +393,16 @@
   \begin{itemize}
     \item<2-> ガチャにおけるサーバーサイドの確率計算に疑念を抱くユーザーがいる
     \item<3-> コミットメントにおける隠蔽と束縛がガチャに大きな影響を与える
-    \item<4-> 量子ビットを利用することで、コミットメントを利用したより公平なガチャが作れる
+    \item<4-> 量子計算を利用することで、古典計算のコミットメントを利用するより公平なガチャが作れる
   \end{itemize}
+
+  \begin{center}
+    \uncover<5->{
+      \begin{tikzpicture}
+        \calloutquote[width=7cm,position={(-0.7,-0.2)},fill=green!30,rounded corners]{興味がある方は僕と話しましょう！}
+      \end{tikzpicture}
+    }
+  \end{center}
 \end{frame}
 
 \section*{参考文献}
@@ -312,12 +417,12 @@
 \begin{frame}
   \frametitle{目次}
 
-  \tableofcontents[hideallsubsections]
+  \tableofcontents
 \end{frame}
 
 \begin{frame}
   \centering
-  {\Huge Thank you for attention!}
+  {\Huge Thank you for your attention!}
 \end{frame}
 
 \end{document}
