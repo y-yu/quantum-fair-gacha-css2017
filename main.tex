@@ -3,7 +3,7 @@
 
 \usetheme{Boadilla}
 \usecolortheme{seahorse}
-%\usefonttheme{serif}
+% \usefonttheme{serif}
 \beamertemplatenavigationsymbolsempty
 
 \setbeamertemplate{bibliography item}{\insertbiblabel}
@@ -167,15 +167,15 @@
   \uncover<2->{
     \begin{block}{コミットメント}
       \begin{description}
-        \item[コミット]<3->
+        \item[コミット]
           送信者はコミットしたい情報$b$を暗号化して受信者に送信する
-        \item[公開]<4->
+        \item[公開]
           送信者は受信者が$b$を復元できるように付加的な情報$r$を受信者に送信する 
       \end{description}
     \end{block}
   }
 
-  \uncover<5->{
+  \uncover<3->{
     \begin{exampleblock}{コミットメントの性質}
       \begin{description}
         \item[隠蔽] コミットのステップでは、受信者はコミットされた値について何も分からない
@@ -332,6 +332,7 @@
    
     \item アリスは$b, x$をボブへ公開し、ボブは量子メモリーから$\ket{\phi_{b,x}}$を
     取り出し基底$\{\ket{\phi_{b,0}}, \ket{\phi_{b,1}}, \ket{2 - b}\}$で測定し、
+
     測定結果を$x'$とする
    
     \item $x \ne x'$の場合ボブは処理を中止する。
@@ -341,7 +342,7 @@
   \uncover<1->{
     \begin{tikzpicture}[overlay, remember picture]
       \pgftransformshift{\pgfpointanchor{current page}{center}}
-      \calloutquote[width=8cm,position={(0.7,-0.2)},at={(0,1)},fill=red!30,rounded corners]{\LARGE 時間がいないの割愛！}
+      \calloutquote[width=7cm,position={(0.7,-0.2)},at={(0,1)},fill=red!30,rounded corners]{\LARGE 時間がないの割愛！}
     \end{tikzpicture}
   }
 
@@ -379,7 +380,8 @@
 
     \uncover<4->{
       \begin{tikzpicture}
-        \calloutquote[width=9cm,position={(0.7,-0.2)},fill=red!30,rounded corners]{きっとこのプロトコルの需要がうまれるはず！}
+        \calloutquote[width=9cm,position={(0.7,-0.2)},fill=red!30,rounded corners]{きっとガチャも量子情報で実装される
+          はず！}
       \end{tikzpicture}
     }
   \end{center}
