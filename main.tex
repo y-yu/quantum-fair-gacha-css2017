@@ -12,7 +12,6 @@
 \usepackage{luacode}
 \usepackage{luatexja}
 \usepackage{pgfpages}
-\usepackage[osf]{mathpazo}
 
 \begin{luacode*}
   USE_IPAFONT = os.getenv"USE_IPAFONT"
@@ -32,6 +31,7 @@
 \usepackage{tikz}
 \usepackage{framed}
 \usepackage[ss]{libertine}
+\usepackage[libertine]{newtxmath}
 \usepackage{amsmath}
 \usepackage{mathtools}
 \usepackage{braket}
@@ -53,8 +53,8 @@
   Hikaru \textsc{Yoshimura}
 }
 \date[October 23, 2017]{%
-  October 23, 2017 \\%
-  {\footnotesize (Commit ID: \GITAbrHash)}
+   \textit{\rmfamily CSSx2.0}, October 23, 2017 \\%
+  {\footnotesize (Git Commit ID: \GITAbrHash)}
 }
 \institute[株式会社ドワンゴ]{%
   株式会社ドワンゴ \\
@@ -86,11 +86,13 @@
         \includegraphics[width=0.95\textwidth]{img/bird2x.png}
       \end{figure}
 
-      \begin{description}
-        \item[Twitter] \href{https://twitter.com/\_yyu\_}{@\_yyu\_}
-        \item[Qiita] \href{https://qiita.com/yyu}{yyu}
-        \item[GitHub] \href{https://github.com/y-yu}{y-yu}
-      \end{description}
+      \begin{table}[h]
+        \begin{tabular}{ll}
+          Twitter & \href{https://twitter.com/\_yyu\_}{@\_yyu\_} \\
+          Qiita &  \href{https://qiita.com/yyu}{yyu} \\
+          GitHub &  \href{https://github.com/y-yu}{y-yu} \\
+        \end{tabular}
+      \end{table}
     \end{column}
     \begin{column}{0.6\textwidth}
       \begin{itemize}
@@ -112,7 +114,7 @@
 
   \begin{itemize}
     \item<2-> ソーシャルゲームなどに実装された機能のひとつ
-    \item<3-> ユーザーがお金を投入すると\textbf{確率}で景品を入手できる
+    \item<3-> ユーザーがお金を投入すると確率で景品を入手できる
   \end{itemize}
 
   \begin{center}
@@ -142,21 +144,34 @@
   \frametitle{公平なガチャ}
 
   \begin{itemize}
-    \item<2-> 次のような\textbf{公平なガチャ}が欲しい
-    \begin{itemize}
-      \item<3-> ユーザーにとっても運営にとっても、ガチャによる景品の出現確率が実装に基づいて明らかである
-      \item<4-> 悪意を持つユーザーや、悪意を持つ運営による確率操作ができない
-    \end{itemize}
+    \item<2-> 次のような``公平なガチャ''が欲しい
   \end{itemize}
+  
+  \uncover<3->{
+    \begin{block}{公平なガチャ}
+      \begin{itemize}
+        \item ユーザーにとっても運営にとっても、ガチャによる景品の出現確率が実装に基づいて明らかである
+        \item 悪意を持つユーザーや悪意を持つ運営による確率操作ができない
+      \end{itemize}
+    \end{block}
+  }
 
-  \uncover<5->{
+  \uncover<4->{
     \begin{exampleblock}{既存の方法}
       \begin{itemize}
         \item ブロックチェーンを利用した方法
-        \item \textbf{コミットメントを利用した方法}\cite{commitment}
+        \item コミットメントを利用した方法\cite{commitment}
       \end{itemize}
     \end{exampleblock}
   }
+
+  \begin{center}
+    \uncover<5->{
+      \begin{tikzpicture}
+        \calloutquote[width=11cm,position={(0.7,-0.2)},fill=cyan!30,rounded corners]{今回はコミットメントを利用した方法について説明します}
+      \end{tikzpicture}
+    }
+  \end{center}
 \end{frame}
 
 \section{コミットメント}
@@ -253,7 +268,7 @@
 
     \uncover<2->{
       \begin{tikzpicture}
-        \calloutquote[width=9cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{\LARGE 量子情報を使おう！}
+        \calloutquote[width=7cm,position={(0.7,-0.2)},fill=green!30,rounded corners]{\LARGE 量子情報を使おう！}
       \end{tikzpicture}
     }
   \end{center}
@@ -277,12 +292,14 @@
   }
 
   \begin{itemize}
-    \item<5-> ``量子コイントス''\cite{AMBAINIS2004398,PhysRevA.80.062321}のテクニックを利用している
+    \item<5-> \textbf{量子コイントス}\cite{AMBAINIS2004398,PhysRevA.80.062321}のテクニックを利用している
   \end{itemize}
 
 \end{frame}
 
 \section{量子コイントス}
+
+\renewcommand*{\arraystretch}{1.3}
 
 \begin{frame}
   \frametitle{量子コイントス\cite{AMBAINIS2004398}}
@@ -309,8 +326,11 @@
     \item<5-> $x \ne x'$の場合ボブは処理を中止する。
     そうでない場合、アリスとボブはコイントスの結果として$b \oplus b'$を得る
   \end{enumerate}
-\end{frame}
 
+  % スペースを揃えるため
+  \begin{tikzpicture}[overlay, remember picture]
+  \end{tikzpicture}
+\end{frame}
 
 \begin{frame}
   \frametitle{量子コイントス\cite{AMBAINIS2004398}}
@@ -332,7 +352,6 @@
    
     \item アリスは$b, x$をボブへ公開し、ボブは量子メモリーから$\ket{\phi_{b,x}}$を
     取り出し基底$\{\ket{\phi_{b,0}}, \ket{\phi_{b,1}}, \ket{2 - b}\}$で測定し、
-
     測定結果を$x'$とする
    
     \item $x \ne x'$の場合ボブは処理を中止する。
