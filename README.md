@@ -1,6 +1,11 @@
 量子ビットで公平なガチャ CSS2017
 ============================
 
+## 成果物（PDF）
+
+- [アニメーションあり版](https://y-yu.github.io/quantum-fair-gacha-css2017/quantum_fair_gacha.pdf)
+- [アニメーションなし版](https://y-yu.github.io/quantum-fair-gacha-css2017/quantum_fair_gacha_without_animation.pdf)
+
 ## コンパイル
 
 コンパイルにはLuaLaTeXが必要です。[TeXLive](https://www.tug.org/texlive/)（または[MacTeX](https://tug.org/mactex/)）をインストールしてください。
